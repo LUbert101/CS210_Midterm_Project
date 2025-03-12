@@ -8,7 +8,7 @@ using namespace std;
 class CSVReader {
 public:
     static vector<vector<string>> readCSV(const string& filename) {
-        ifstream file(filename);
+        ifstream file("SchoolLists/"+filename);
         vector<vector<string>> data;
         string line, word;
 
