@@ -110,7 +110,7 @@ public:
 // Main function to load data, manage the linked list, and allow user interaction (Task 4)
 int main() {
     SchoolList list;
-    vector<vector<string>> data = CSVReader::readCSV("schools.csv");
+    vector<vector<string>> data = CSVReader::readCSV("Illinois_Schools.csv");
 
     // Load data into linked list, skipping the header row
     for (size_t i = 1; i < data.size(); ++i) {
