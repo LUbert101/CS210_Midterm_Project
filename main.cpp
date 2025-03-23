@@ -40,6 +40,18 @@ struct School {
         : name(n), address(a), city(c), state(s), county(co), next(nullptr) {}
 };
 
+struct TreeNode {
+    School* school;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(School* school) : school(school), left(nullptr), right(nullptr) {}
+};
+
+class SchoolBST {
+    private:
+    TreeNode* root;
+};
+
 // Class to manage linked list of schools (Task 2)
 class SchoolList {
 private:
