@@ -53,7 +53,7 @@ class SchoolBST {
 
     TreeNode* insert(TreeNode* node, School* school) {
         if (node == nullptr) {
-            new TreeNode(school);
+            return new TreeNode(school);
         } if (school->name < node->school->name) {
             node->left = insert(node->left, school);
         } else {
