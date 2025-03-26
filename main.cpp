@@ -61,11 +61,22 @@ class SchoolBST {
         } return node;
     }
 
+    void displayInOrder(TreeNode* node) {
+        if (!node) return;
+        displayInOrder(node->left);
+        cout << node->school->name << "," << node->school->address << endl;
+        displayInOrder(node->right);
+    }
+
     public:
     SchoolBST() : root(nullptr) {}
 
     void insert(School* school) {
         root = insert(root, school);
+    }
+
+    void displayInOrder() {
+        displayInOrder(root);
     }
 };
 
@@ -157,7 +168,7 @@ int main() {
 
         switch (choice) {
             case 1:
-                list.display();
+                bst.displayInOrder();
                 break;
             case 2:
                 cout << "Enter school name: ";
