@@ -40,6 +40,35 @@ struct School {
         : name(n), address(a), city(c), state(s), county(co), next(nullptr) {}
 };
 
+struct TreeNode {
+    School* school;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(School* school) : school(school), left(nullptr), right(nullptr) {}
+};
+
+class SchoolBST {
+    private:
+    TreeNode* root;
+
+    TreeNode* insert(TreeNode* node, School* school) {
+        if (node == nullptr) {
+            return new TreeNode(school);
+        } if (school->name < node->school->name) {
+            node->left = insert(node->left, school);
+        } else {
+            node->right = insert(node->right, school);
+        } return node;
+    }
+
+    public:
+    SchoolBST() : root(nullptr) {}
+
+    void insert(School* school) {
+        root = insert(root, school);
+    }
+};
+
 // Class to manage linked list of schools (Task 2)
 class SchoolList {
 private:
@@ -109,13 +138,14 @@ public:
 
 // Main function to load data, manage the linked list, and allow user interaction (Task 4)
 int main() {
+    SchoolBST bst;
     SchoolList list;
     vector<vector<string>> data = CSVReader::readCSV("Illinois_Schools.csv");
 
     // Load data into linked list, skipping the header row
     for (size_t i = 1; i < data.size(); ++i) {
         if (data[i].size() == 5)
-            list.insertLast(new School(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]));
+            bst.insert(new School(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]));
     }
 
     int choice;
