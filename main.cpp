@@ -80,6 +80,7 @@ class SchoolBST {
     }
 };
 
+/*
 // Class to manage linked list of schools (Task 2)
 class SchoolList {
 private:
@@ -146,11 +147,12 @@ public:
         }
     }
 };
+*/
 
 // Main function to load data, manage the linked list, and allow user interaction (Task 4)
 int main() {
     SchoolBST bst;
-    SchoolList list;
+    //SchoolList list;
     vector<vector<string>> data = CSVReader::readCSV("Illinois_Schools.csv");
 
     // Load data into linked list, skipping the header row
