@@ -60,6 +60,13 @@ class SchoolBST {
             node->right = insert(node->right, school);
         } return node;
     }
+    TreeNode* findByName(TreeNode* node, const string& name) {
+        if (!node || node->school->name == name) {
+            return node;
+        } if (node->school->name > name) {
+            return findByName(node->left, name);
+        } return findByName(node->right, name);
+    }
 
     void displayInOrder(TreeNode* node) {
         if (!node) return;
@@ -87,6 +94,11 @@ class SchoolBST {
 
     void insert(School* school) {
         root = insert(root, school);
+    }
+
+    School* findByName(const string& name) {
+        TreeNode* node = findByName(root, name);
+        return node ? node->school : nullptr;
     }
 
     void displayInOrder() {
@@ -203,10 +215,10 @@ int main() {
             case 4:
                 cout << "Enter school name: ";
                 getline(cin, name);
-                //if (School* school = .findByName(name))
-                   // cout << school->name << ", " << school->address << "\n";
-                //else
-                   // cout << "School not found.\n";
+                if (School* school = bst.findByName(name))
+                    cout << school->name << ", " << school->address << "\n";
+                else
+                    cout << "School not found.\n";
                 break;
             case 5:
                 cout << "Enter school name: ";
