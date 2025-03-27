@@ -68,6 +68,20 @@ class SchoolBST {
         displayInOrder(node->right);
     }
 
+    void displayPreOrder(TreeNode* node) {
+        if (!node) return;
+        cout << node->school->name << "," << node->school->address << endl;
+        displayPreOrder(node->left);
+        displayPreOrder(node->right);
+    }
+
+    void displayPostOrder(TreeNode* node) {
+        if (!node) return;
+        displayPostOrder(node->left);
+        displayPostOrder(node->right);
+        cout << node->school->name << "," << node->school->address << endl;
+    }
+
     public:
     SchoolBST() : root(nullptr) {}
 
@@ -77,6 +91,14 @@ class SchoolBST {
 
     void displayInOrder() {
         displayInOrder(root);
+    }
+
+    void displayPreOrder() {
+        displayPreOrder(root);
+    }
+
+    void displayPostOrder() {
+        displayPostOrder(root);
     }
 };
 
@@ -173,10 +195,10 @@ int main() {
                 bst.displayInOrder();
                 break;
             case 2:
-                bst.displayInOrder();
+                bst.displayPreOrder();
                 break;
             case 3:
-                bst.displayInOrder();
+                bst.displayPostOrder();
                 break;
             case 4:
                 cout << "Enter school name: ";
