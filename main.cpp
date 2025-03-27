@@ -164,7 +164,7 @@ int main() {
     int choice;
     string name;
     do {
-        cout << "1. Display Schools\n2. Find School\n3. Delete School\n4. Exit\nChoice: ";
+        cout << "1. Display Schools (In-Order)\n2. Display Schools (Pre-Order)\n3. Display Schools (Post-Order)\n4. Find School\n5. Delete School\n6. Exit\nChoice: ";
         cin >> choice;
         cin.ignore();
 
@@ -173,17 +173,23 @@ int main() {
                 bst.displayInOrder();
                 break;
             case 2:
-                cout << "Enter school name: ";
-                getline(cin, name);
-                if (School* school = list.findByName(name))
-                    cout << school->name << ", " << school->address << "\n";
-                else
-                    cout << "School not found.\n";
+                bst.displayInOrder();
                 break;
             case 3:
+                bst.displayInOrder();
+                break;
+            case 4:
                 cout << "Enter school name: ";
                 getline(cin, name);
-                list.deleteByName(name);
+                //if (School* school = .findByName(name))
+                   // cout << school->name << ", " << school->address << "\n";
+                //else
+                   // cout << "School not found.\n";
+                break;
+            case 5:
+                cout << "Enter school name: ";
+                getline(cin, name);
+                //list.deleteByName(name);
                 break;
         }
     } while (choice != 4);
