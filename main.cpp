@@ -266,6 +266,6 @@ int main() {
                 bst.deleteByName(name);
                 break;
         }
-    } while (choice != 4);
+    } while (choice != 6);
     return 0;
 }
