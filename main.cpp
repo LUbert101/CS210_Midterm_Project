@@ -60,6 +60,38 @@ class SchoolBST {
             node->right = insert(node->right, school);
         } return node;
     }
+
+    TreeNode* findMin(TreeNode* node) {
+        while (node && node->left)
+            node = node->left;
+        return node;
+    }
+
+    TreeNode* deleteByName(TreeNode* node, const string& name) {
+        if (node == nullptr) return nullptr;
+        if (name < node->school->name) {
+            node->left = deleteByName(node->left, name);
+        } else if (name > node->school->name) {
+            node->right = deleteByName(node->right, name);
+        } else {
+            //Node with less than 2 children
+            if (!node->left) {
+                TreeNode* temp = node->right;
+                delete node;
+                return temp;
+            } else if (!node->right) {
+                TreeNode* temp = node->left;
+                delete node;
+                return temp;
+            }
+
+            //Node with 2 children
+            TreeNode* successor = findMin(node->right);
+            node->school = successor->school;
+            node->right = deleteByName(node->right, successor->school->name);
+        }
+    }
+
     TreeNode* findByName(TreeNode* node, const string& name) {
         if (!node || node->school->name == name) {
             return node;
@@ -94,6 +126,14 @@ class SchoolBST {
 
     void insert(School* school) {
         root = insert(root, school);
+    }
+
+    TreeNode* findMin() {
+        return findMin(root);
+    }
+
+    TreeNode* deleteByName(const string& name) {
+        root = deleteByName(root, name);
     }
 
     School* findByName(const string& name) {
@@ -223,7 +263,7 @@ int main() {
             case 5:
                 cout << "Enter school name: ";
                 getline(cin, name);
-                //list.deleteByName(name);
+                bst.deleteByName(name);
                 break;
         }
     } while (choice != 4);
