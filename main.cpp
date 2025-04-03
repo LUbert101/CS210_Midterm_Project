@@ -40,6 +40,24 @@ struct School {
         : name(n), address(a), city(c), state(s), county(co), next(nullptr) {}
 };
 
+class SchoolHashTable {
+private:
+    int polynomialHash(string key, int tableSize, int prime = 31) {
+        long hash = 0;
+        long power = 1;
+        for (char ch : key) {
+            hash = (hash + (ch - 'a' + 1) * power) % tableSize;
+            power = (power * prime) % tableSize;
+        }
+        return hash;
+    }
+
+public:
+    void insert(School* School) {
+
+    }
+};
+
 // Class to manage linked list of schools (Task 2)
 class SchoolList {
 private:
