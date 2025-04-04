@@ -8,7 +8,7 @@ using namespace std;
 class CSVReader {
 public:
     static vector<vector<string>> readCSV(const string& filename) {
-        ifstream file("SchoolLists/"+filename);
+        ifstream file("cmake-build-debug/SchoolLists/"+filename);
         vector<vector<string>> data;
         string line, word;
 
@@ -45,22 +45,34 @@ private:
     static const int TABLE_SIZE = 100;
     vector<School*> table;
 
-    int hashFunction(string key, int tableSize) {
+    int hashFunction(string key, int tableSize = TABLE_SIZE) {
         int hash = 0;
         for (char ch : key) {
-            hash = (hash + (ch - 'a' + 1) * power) % tableSize;
-            power = (power * prime) % tableSize;
+            hash += ch;
         }
-        return hash;
+        return hash % tableSize;
     }
 
 public:
     SchoolHashTable() : table(TABLE_SIZE, nullptr) {}
 
     void insert(School* School) {
-        int index = polynomialHash(School->name);
+        int index = hashFunction(School->name);
         School->next = table[index];
         table[index] = School;
+    }
+
+    void display() {
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            if (table[i]) {
+                School* temp = table[i];
+                cout << "Index " << i << ": ";
+                while (temp) {
+                    cout << temp->name << ", " << temp->address << "" << temp->city << temp->state << temp->county << endl;
+                    temp = temp->next;
+                }
+            }
+        }
     }
 };
 
@@ -89,15 +101,15 @@ int main() {
             case 2:
                 cout << "Enter school name: ";
                 getline(cin, name);
-                if (School* school = hashTable.findByName(name))
-                    cout << school->name << ", " << school->address << "\n";
-                else
+               // if (School* school = hashTable.findByName(name))
+              //      cout << school->name << ", " << school->address << "\n";
+             //   else
                     cout << "School not found.\n";
                 break;
             case 3:
                 cout << "Enter school name: ";
                 getline(cin, name);
-                hashTable.deleteByName(name);
+             //   hashTable.deleteByName(name);
                 break;
         }
     } while (choice != 4);
