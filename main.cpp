@@ -45,9 +45,8 @@ private:
     static const int TABLE_SIZE = 100;
     vector<School*> table;
 
-    int polynomialHash(string key, int tableSize = TABLE_SIZE, int prime = 31) {
-        long hash = 0;
-        long power = 1;
+    int hashFunction(string key, int tableSize) {
+        int hash = 0;
         for (char ch : key) {
             hash = (hash + (ch - 'a' + 1) * power) % tableSize;
             power = (power * prime) % tableSize;
