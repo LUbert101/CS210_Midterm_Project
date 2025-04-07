@@ -62,6 +62,18 @@ public:
         table[index] = School;
     }
 
+    School* findByName(const string& name) {
+        int index = hashFunction(name);
+        School* School = table[index];
+        while (School) {
+            if (School->name == name) {
+                return School;
+            }
+            School = School->next;
+        }
+        return nullptr;
+    }
+
     void display() {
         for (int i = 0; i < TABLE_SIZE; i++) {
             if (table[i]) {
