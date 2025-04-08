@@ -42,7 +42,7 @@ struct School {
 
 class SchoolHashTable {
 private:
-    static const int TABLE_SIZE = 100;
+    static const int TABLE_SIZE = 10;
     vector<School*> table;
 
     int hashFunction(string key, int tableSize = TABLE_SIZE) {
@@ -62,6 +62,30 @@ public:
         table[index] = School;
     }
 
+    void deleteByName(const string& name) {
+        int index = hashFunction(name);
+        School* temp = table[index];
+        School* prev = nullptr;
+
+        while (temp && temp->name != name) {
+            prev = temp;
+            temp = temp->next;
+        }
+
+        if (!temp) {
+            cout << "School not found.\n";
+            return;
+        }
+
+        if (!prev)
+            table[index] = temp->next;
+        else
+            prev->next = temp->next;
+
+        delete temp;
+    }
+
+
     School* findByName(const string& name) {
         int index = hashFunction(name);
         School* School = table[index];
@@ -80,7 +104,7 @@ public:
                 School* temp = table[i];
                 cout << "Index " << i << ": ";
                 while (temp) {
-                    cout << temp->name << ", " << temp->address << "" << temp->city << temp->state << temp->county << endl;
+                    cout << temp->name << ", " << temp->address << " " << temp->city << ", " << temp->state << ", " << temp->county << endl;
                     temp = temp->next;
                 }
             }
@@ -113,15 +137,15 @@ int main() {
             case 2:
                 cout << "Enter school name: ";
                 getline(cin, name);
-               // if (School* school = hashTable.findByName(name))
-              //      cout << school->name << ", " << school->address << "\n";
-             //   else
+                if (School* school = hashTable.findByName(name))
+                    cout << school->name << ", " << school->address << "\n";
+                else
                     cout << "School not found.\n";
                 break;
             case 3:
                 cout << "Enter school name: ";
                 getline(cin, name);
-             //   hashTable.deleteByName(name);
+                hashTable.deleteByName(name);
                 break;
         }
     } while (choice != 4);
