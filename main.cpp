@@ -98,16 +98,6 @@ public:
         }
         return nullptr;
     }
-
-    void display() {
-        School* temp = head;
-        while (temp) {
-            cout << temp->name << ", " << temp->address << ", "
-                 << temp->city << ", " << temp->state << ", "
-                 << temp->county << endl;
-            temp = temp->next;
-        }
-    }
 };
 
 class SchoolBST {
@@ -163,27 +153,6 @@ class SchoolBST {
          } return findByName(node->right, name);
      }
 
-     void displayInOrder(TreeNode* node) {
-         if (!node) return;
-         displayInOrder(node->left);
-         cout << node->school->name << "," << node->school->address << endl;
-         displayInOrder(node->right);
-     }
-
-     void displayPreOrder(TreeNode* node) {
-         if (!node) return;
-         cout << node->school->name << "," << node->school->address << endl;
-         displayPreOrder(node->left);
-         displayPreOrder(node->right);
-     }
-
-     void displayPostOrder(TreeNode* node) {
-         if (!node) return;
-         displayPostOrder(node->left);
-         displayPostOrder(node->right);
-         cout << node->school->name << "," << node->school->address << endl;
-     }
-
      public:
      SchoolBST() : root(nullptr) {}
 
@@ -202,18 +171,6 @@ class SchoolBST {
      School* findByName(const string& name) {
          TreeNode* node = findByName(root, name);
          return node ? node->school : nullptr;
-     }
-
-     void displayInOrder() {
-         displayInOrder(root);
-     }
-
-     void displayPreOrder() {
-         displayPreOrder(root);
-     }
-
-     void displayPostOrder() {
-         displayPostOrder(root);
      }
  };
 
@@ -273,20 +230,6 @@ public:
             School = School->next;
         }
         return nullptr;
-    }
-
-    void display() {
-        for (int i = 0; i < TABLE_SIZE; i++) {
-            if (table[i]) {
-                School* temp = table[i];
-                cout << "Index " << i << ": ";
-                while (temp) {
-                    cout << temp->name << ", " << temp->address << "" << temp->city << temp->state << temp->county << endl;
-                    cout << temp->name << ", " << temp->address << " " << temp->city << ", " << temp->state << ", " << temp->county << endl;
-                    temp = temp->next;
-                }
-            }
-        }
     }
 };
 
