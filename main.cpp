@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include "timer.h"
+#include <numeric>
 using namespace std;
 
 class CSVReader {
@@ -235,15 +237,36 @@ public:
 
 int main() {
     SchoolList list;
+    SchoolBST bst;
     SchoolHashTable hashTable;
     vector<vector<string>> data = CSVReader::readCSV("Illinois_Schools.csv");
 
+    vector<School*> schools;
     for (size_t i = 1; i < data.size(); ++i) {
         if (data[i].size() == 5) {
-            list.insertLast(new School(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]));
-            hashTable.insert(new School(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]));
+            schools.push_back(new School(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]));
         }
     }
+
+    // Timed operations
+    vector<double> timesLinkedList, timesBST, timesHashTable;
+
+    cout << "Timing Insertion..." << endl;
+    for (auto school : schools) {
+        timesLinkedList.push_back(Timer::time_function([&]() { list.insertLast(school); }));
+        timesBST.push_back(Timer::time_function([&]() { bst.insert(school); }));
+        timesHashTable.push_back(Timer::time_function([&]() { hashTable.insert(school); }));
+    }
+
+    // Calculate averages
+    auto average = [](const vector<double>& times) {
+        return accumulate(times.begin(), times.end(), 0.0) / times.size();
+    };
+
+    cout << "Average Times (Microseconds):\n";
+    cout << "Linked List - Insertion: " << average(timesLinkedList) << endl;
+    cout << "Binary Search Tree - Insertion: " << average(timesBST) << endl;
+    cout << "Hash Table - Insertion: " << average(timesHashTable) << endl;
 
     return 0;
 
