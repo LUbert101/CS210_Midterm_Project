@@ -75,8 +75,9 @@ public:
             return;
         }
         School* temp = head;
-        while (temp->next)
+        while (temp->next) {
             temp = temp->next;
+        }
         temp->next = school;
     }
 
@@ -185,7 +186,7 @@ class SchoolBST {
 class SchoolHashTable {
 private:
     static const int TABLE_SIZE = 100;
-    vector<School*> table;
+    vector<HashNode*> table;
 
     int hashFunction(string key, int tableSize = TABLE_SIZE) {
         int hash = 0;
@@ -200,16 +201,17 @@ public:
 
     void insert(School* School) {
         int index = hashFunction(School->name);
-        School->next = table[index];
-        table[index] = School;
+        HashNode* newNode = new HashNode(School);
+        newNode->next = table[index];
+        table[index] = newNode;
     }
 
     void deleteByName(const string& name) {
         int index = hashFunction(name);
-        School* temp = table[index];
-        School* prev = nullptr;
+        HashNode* temp = table[index];
+        HashNode* prev = nullptr;
 
-        while (temp && temp->name != name) {
+        while (temp && temp->school->name != name) {
             prev = temp;
             temp = temp->next;
         }
@@ -230,12 +232,12 @@ public:
 
     School* findByName(const string& name) {
         int index = hashFunction(name);
-        School* School = table[index];
-        while (School) {
-            if (School->name == name) {
-                return School;
+        HashNode* temp = table[index];
+        while (temp) {
+            if (temp->school->name == name) {
+                return temp->school;
             }
-            School = School->next;
+            temp = temp->next;
         }
         return nullptr;
     }
@@ -245,7 +247,7 @@ int main() {
     SchoolList list;
     SchoolBST bst;
     SchoolHashTable hashTable;
-    vector<vector<string>> data = CSVReader::readCSV("Illinois_Schools.csv");
+    vector<vector<string>> data = CSVReader::readCSV("USA_Schools.csv");
 
     vector<School*> schools;
     for (size_t i = 1; i < data.size(); ++i) {
@@ -258,12 +260,15 @@ int main() {
     vector<double> timesLinkedList, timesBST, timesHashTable;
 
     cout << "Timing Insertion..." << endl;
+    size_t index = 0;
     for (auto school : schools) {
+        cout << "Processing school " << ++index << " / " << schools.size() << ": " << school->name << endl;
         timesLinkedList.push_back(Timer::time_function([&]() { list.insertLast(school); }));
         timesBST.push_back(Timer::time_function([&]() { bst.insert(school); }));
         timesHashTable.push_back(Timer::time_function([&]() { hashTable.insert(school); }));
     }
 
+    cout << "Timing Search..." << endl;
     // Calculate averages
     auto average = [](const vector<double>& times) {
         return accumulate(times.begin(), times.end(), 0.0) / times.size();
