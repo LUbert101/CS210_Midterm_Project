@@ -49,6 +49,9 @@ struct TreeNode {
     TreeNode* left;
     TreeNode* right;
     TreeNode(School* school) : school(school), left(nullptr), right(nullptr) {}
+    ~TreeNode() {
+        delete school;
+    }
 };
 
 struct HashNode {
@@ -129,14 +132,17 @@ class SchoolBST {
          return node;
      }
 
-     TreeNode* deleteByName(TreeNode* node, const string& name) {
-         if (node == nullptr) return nullptr;
+    TreeNode* deleteByName(TreeNode* node, const string& name) {
+         if (node == nullptr) {
+             cout << "School not found." << endl;
+             return nullptr;
+         }
          if (name < node->school->name) {
              node->left = deleteByName(node->left, name);
          } else if (name > node->school->name) {
              node->right = deleteByName(node->right, name);
          } else {
-             //Node with less than 2 children
+             // Node with less than 2 children
              if (!node->left) {
                  TreeNode* temp = node->right;
                  delete node;
@@ -146,12 +152,12 @@ class SchoolBST {
                  delete node;
                  return temp;
              }
-
-             //Node with 2 children
+             // Node with 2 children
              TreeNode* successor = findMin(node->right);
              node->school = successor->school;
              node->right = deleteByName(node->right, successor->school->name);
          }
+         return node;
      }
 
      TreeNode* findByName(TreeNode* node, const string& name) {
@@ -185,7 +191,7 @@ class SchoolBST {
 
 class SchoolHashTable {
 private:
-    static const int TABLE_SIZE = 100;
+    static const int TABLE_SIZE = 10000;
     vector<HashNode*> table;
 
     int hashFunction(string key, int tableSize = TABLE_SIZE) {
@@ -247,25 +253,91 @@ int main() {
     SchoolList list;
     SchoolBST bst;
     SchoolHashTable hashTable;
-    vector<vector<string>> data = CSVReader::readCSV("USA_Schools.csv");
+    vector<vector<string>> data = CSVReader::readCSV("Illinois_Schools.csv");
 
-    vector<School*> schools;
+    vector<School*> schools, schools2, schools3;
     for (size_t i = 1; i < data.size(); ++i) {
         if (data[i].size() == 5) {
             schools.push_back(new School(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]));
+            schools2.push_back(new School(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]));
+            schools3.push_back(new School(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]));
         }
     }
 
+
     // Timed operations
-    vector<double> timesLinkedList, timesBST, timesHashTable;
+    vector<double> timesLinkedListInsert, timesBSTInsert, timesHashTableInsert;
+    vector<double> timesLinkedListDelete, timesBSTDelete, timesHashTableDelete;
+    vector<double> timesLinkedListFind, timesBSTFind, timesHashTableFind;
 
     cout << "Timing Insertion..." << endl;
     size_t index = 0;
+    int lastPercentPrinted = -1;
     for (auto school : schools) {
-        cout << "Processing school " << ++index << " / " << schools.size() << ": " << school->name << endl;
-        timesLinkedList.push_back(Timer::time_function([&]() { list.insertLast(school); }));
-        timesBST.push_back(Timer::time_function([&]() { bst.insert(school); }));
-        timesHashTable.push_back(Timer::time_function([&]() { hashTable.insert(school); }));
+        index++;
+        int percentComplete = (index * 100) / schools.size();
+
+        if (percentComplete > lastPercentPrinted) {
+            lastPercentPrinted = percentComplete;
+            cout << "Percent Complete: " << percentComplete << "% (" << index << " / " << schools.size() << ")" << endl;
+        }
+        timesLinkedListInsert.push_back(Timer::time_function([&]() { list.insertLast(school); }));
+        timesBSTInsert.push_back(Timer::time_function([&]() { bst.insert(school); }));
+        timesHashTableInsert.push_back(Timer::time_function([&]() { hashTable.insert(school); }));
+    }
+
+    cout << "Timing Search..." << endl;
+    index = 0;
+    lastPercentPrinted = -1;
+    for (auto school : schools) {
+        index++;
+        int percentComplete = (index * 100) / schools.size();
+
+        if (percentComplete > lastPercentPrinted) {
+            lastPercentPrinted = percentComplete;
+            cout << "Percent Complete: " << percentComplete << "% (" << index << " / " << schools.size() << ")" << endl;
+        }
+        timesLinkedListFind.push_back(Timer::time_function([&]() { list.findByName(school->name); }));
+        timesBSTFind.push_back(Timer::time_function([&]() { bst.findByName(school->name); }));
+        timesHashTableFind.push_back(Timer::time_function([&]() { hashTable.findByName(school->name); }));
+    }
+
+    cout << "Timing Deletion..." << endl;
+    index = 0;
+    lastPercentPrinted = -1;
+    for (auto school : schools) {
+        index++;
+        int percentComplete = (index * 100) / schools.size();
+
+        if (percentComplete > lastPercentPrinted) {
+            lastPercentPrinted = percentComplete;
+            cout << "Percent Complete: " << percentComplete << "% (" << index << " / " << schools.size() << ")" << endl;
+        }
+        timesLinkedListDelete.push_back(Timer::time_function([&]() { list.deleteByName(school->name); }));
+    }
+    index = 0;
+    lastPercentPrinted = -1;
+    for (auto school : schools2) {
+        index++;
+        int percentComplete = (index * 100) / schools.size();
+
+        if (percentComplete > lastPercentPrinted) {
+            lastPercentPrinted = percentComplete;
+            cout << "Percent Complete: " << percentComplete << "% (" << index << " / " << schools.size() << ")" << endl;
+        }
+        timesHashTableDelete.push_back(Timer::time_function([&]() { hashTable.deleteByName(school->name); }));
+    }
+    index = 0;
+    lastPercentPrinted = -1;
+    for (auto school : schools3) {
+        index++;
+        int percentComplete = (index * 100) / schools.size();
+
+        if (percentComplete > lastPercentPrinted) {
+            lastPercentPrinted = percentComplete;
+            cout << "Percent Complete: " << percentComplete << "% (" << index << " / " << schools.size() << ")" << endl;
+        }
+        //timesBSTDelete.push_back(Timer::time_function([&]() { bst.deleteByName(school->name); }));
     }
 
     cout << "Timing Search..." << endl;
@@ -274,10 +346,18 @@ int main() {
         return accumulate(times.begin(), times.end(), 0.0) / times.size();
     };
 
-    cout << "Average Times (Microseconds):\n";
-    cout << "Linked List - Insertion: " << average(timesLinkedList) << endl;
-    cout << "Binary Search Tree - Insertion: " << average(timesBST) << endl;
-    cout << "Hash Table - Insertion: " << average(timesHashTable) << endl;
+    cout << "Average Insert Times (Microseconds):\n";
+    cout << "Linked List - Insertion: " << average(timesLinkedListInsert) << endl;
+    cout << "Binary Search Tree - Insertion: " << average(timesBSTInsert) << endl;
+    cout << "Hash Table - Insertion: " << average(timesHashTableInsert) << endl;
+    cout << "Average Search Times (Microseconds):\n";
+    cout << "Linked List - Search: " << average(timesLinkedListFind) << endl;
+    cout << "Binary Search Tree - Search: " << average(timesBSTFind) << endl;
+    cout << "Hash Table - Search: " << average(timesHashTableFind) << endl;
+    cout << "Average Deletion Times (Microseconds):\n";
+    cout << "Linked List - Deletion: " << average(timesLinkedListDelete) << endl;
+    cout << "Binary Search Tree - Deletion: " << average(timesBSTDelete) << endl;
+    cout << "Hash Table - Deletion: " << average(timesHashTableDelete) << endl;
 
     return 0;
 
