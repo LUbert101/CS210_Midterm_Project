@@ -51,6 +51,12 @@ struct TreeNode {
     TreeNode(School* school) : school(school), left(nullptr), right(nullptr) {}
 };
 
+struct HashNode {
+    School* school;
+    HashNode* next;
+    HashNode(School* school) : school(school), next(nullptr) {}
+};
+
 class SchoolList {
 private:
     School* head;
